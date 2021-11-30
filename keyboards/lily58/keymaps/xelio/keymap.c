@@ -114,7 +114,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_MOUSE] = LAYOUT(
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   XXXXXXX, XXXXXXX, KC_BTN3, KC_MS_U, KC_WH_U,  XXXXXXX,                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  XXXXXXX, KC_BTN2, KC_MS_L, KC_MS_D, KC_MS_R,  XXXXXXX,                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, LGUI,    XXXXXXX,
+  XXXXXXX, KC_BTN2, KC_MS_L, KC_MS_D, KC_MS_R,  XXXXXXX,                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LGUI, XXXXXXX,
   XXXXXXX, XXXXXXX, KC_WH_L, KC_WH_R, KC_WH_D,  XXXXXXX,  XXXXXXX, XXXXXXX,  XXXXXXX, KC_TRNS, KC_LSFT, KC_LCTL, KC_LALT, XXXXXXX,
                                XXXXXXX, XXXXXXX, XXXXXXX, KC_BTN1, XXXXXXX, KC_TRNS, XXXXXXX, XXXXXXX
 )
@@ -145,7 +145,7 @@ const char *read_keylogs(void);
 // void set_timelog(void);
 // const char *read_timelog(void);
 
-void oled_task_user(void) {
+bool oled_task_user(void) {
   if (is_keyboard_master()) {
     // If you want to change the display of OLED, you need to change here
     oled_write_ln(read_layer_state(), false);
@@ -157,6 +157,7 @@ void oled_task_user(void) {
   } else {
     oled_write(read_logo(), false);
   }
+    return false;
 }
 #endif // OLED_ENABLE
 
