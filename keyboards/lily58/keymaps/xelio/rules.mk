@@ -13,7 +13,10 @@ AUDIO_ENABLE = no           # Audio output
 RGBLIGHT_ENABLE = no       # Enable WS2812 RGB underlight.
 SWAP_HANDS_ENABLE = no      # Enable one-hand typing
 OLED_ENABLE= yes     # OLED display
+SPACE_CADET_ENABLE = no
 COMBO_ENABLE = yes
+
+ALLOW_WARNINGS=yes
 
 # Do not enable SLEEP_LED_ENABLE. it uses the same timer as BACKLIGHT_ENABLE
 SLEEP_LED_ENABLE = no    # Breathing sleep LED during USB suspend
@@ -22,7 +25,7 @@ SLEEP_LED_ENABLE = no    # Breathing sleep LED during USB suspend
 SRC +=  ./lib/rgb_state_reader.c \
         ./lib/layer_state_reader.c \
         ./lib/logo_reader.c \
-        ./lib/keylogger.c \
+        ./lib/host_led_state_reader.c \
+        # ./lib/keylogger.c \
         # ./lib/mode_icon_reader.c \
-        # ./lib/host_led_state_reader.c \
         # ./lib/timelogger.c \

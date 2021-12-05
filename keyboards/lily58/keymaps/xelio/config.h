@@ -26,10 +26,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define MASTER_RIGHT
 // #define EE_HANDS
 
-#define TAPPING_FORCE_HOLD
-#define TAPPING_TERM 100
+#define TAPPING_TERM 150
+#define TAPPING_TERM_PER_KEY
+#define PERMISSIVE_HOLD
 
-#define COMBO_TERM 30
+#define COMBO_TERM 50
+
+#define TAPPING_TOGGLE 2
 
 /* If defined, GRAVE_ESC will always act as ESC when CTRL is held.
  * This is useful for the Windows task manager shortcut (ctrl+shift+esc).
