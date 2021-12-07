@@ -20,12 +20,19 @@ enum combos {
   CB_DEL_LOWER,
   CB_BSPC_OTHER,
   CB_DEL_OTHER,
+  
+  CB_LEFT,
+  CB_RIGHT,
+  CB_LEFT_LOWER,
+  CB_RIGHT_LOWER,
+  
   CB_CTRLALTDEL,
   CB_CTRLALTINS,
+  
   CB_COMBO_LENGTH
 };
 
-// Marco
+// Macro
 enum custom_keycodes {
     CLR_LY = SAFE_RANGE,
     LOWER_4,
@@ -52,6 +59,12 @@ const uint16_t PROGMEM bspc_lower_combo[] = {LOWER_4, LOWER_5, COMBO_END};
 const uint16_t PROGMEM del_lower_combo[] = {LOWER_5, LOWER_6, COMBO_END};
 const uint16_t PROGMEM bspc_other_combo[] = {MCC_BSPC, MCC_BSDL, COMBO_END};
 const uint16_t PROGMEM del_other_combo[] = {MCC_BSDL, MCC_DEL, COMBO_END};
+
+const uint16_t PROGMEM left_combo[] = {KC_S, KC_D, COMBO_END};
+const uint16_t PROGMEM right_combo[] = {KC_D, KC_F, COMBO_END};
+const uint16_t PROGMEM left_lower_combo[] = {KC_DLR, LT(0,KC_LPRN), COMBO_END};
+const uint16_t PROGMEM right_lower_combo[] = {LT(0,KC_LPRN), LT(0,KC_RPRN), COMBO_END};
+
 const uint16_t PROGMEM ctrlaltdel_combo[] = {KC_GESC, KC_1, KC_2, COMBO_END};
 const uint16_t PROGMEM ctrlaltins_combo[] = {KC_GESC, KC_1, KC_3, COMBO_END};
 
@@ -62,6 +75,12 @@ combo_t key_combos[] = {
   [CB_DEL_LOWER] = COMBO(del_lower_combo, KC_DEL),
   [CB_BSPC_OTHER] = COMBO(bspc_other_combo, KC_BSPC),
   [CB_DEL_OTHER] = COMBO(del_other_combo, KC_DEL),
+  
+  [CB_LEFT] = COMBO(left_combo, KC_LEFT),
+  [CB_RIGHT] = COMBO(right_combo, KC_RGHT),
+  [CB_LEFT_LOWER] = COMBO(left_lower_combo, KC_LEFT),
+  [CB_RIGHT_LOWER] = COMBO(right_lower_combo, KC_RGHT),
+  
   [CB_CTRLALTDEL] = COMBO(ctrlaltdel_combo, LCA(KC_DEL)),
   [CB_CTRLALTINS] = COMBO(ctrlaltins_combo, LCA(KC_INS)),
 };
