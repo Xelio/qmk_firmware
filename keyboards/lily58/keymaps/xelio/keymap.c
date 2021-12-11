@@ -3,6 +3,23 @@
 #include "host.h"
 //#include "tap_dance.c"
 
+
+// Left-hand home row mods
+#define GUI_A LGUI_T(KC_A)
+#define ALT_S LALT_T(KC_S)
+#define CTL_D LCTL_T(KC_D)
+#define SFT_F LSFT_T(KC_F)
+
+// Right-hand home row mods
+#define SFT_J RSFT_T(KC_J)
+#define CTL_K RCTL_T(KC_K)
+#define ALT_L LALT_T(KC_L)
+#define GUI_SCLN RGUI_T(KC_SCLN)
+
+#define RALT_BSPC RALT_T(KC_BSPC)
+#define RALT_0 RALT_T(KC_0)
+#define DOT_SFT LT(0,KC_DOT)
+
 // Layer
 enum layer_number {
   _QWERTY = 0,
@@ -34,34 +51,34 @@ enum combos {
 
 // Macro
 enum custom_keycodes {
-    CLR_LY = SAFE_RANGE,
-    LOWER_4,
-    LOWER_5,
-    LOWER_6,
-    
-    MC_SFLK,
-    
-    MC_UNDO,
-    MC_CUT,
-    MC_COPY,
-    MC_PASTE,
-    
-    MCC_BSPC,
-    MCC_BSDL,
-    MCC_DEL,
+  CLR_LY = SAFE_RANGE,
+  LOWER_4,
+  LOWER_5,
+  LOWER_6,
+  
+  MC_SFLK,
+  
+  MC_UNDO,
+  MC_CUT,
+  MC_COPY,
+  MC_PASTE,
+  
+  MCC_BSPC,
+  MCC_BSDL,
+  MCC_DEL,
 };
 
 uint16_t COMBO_LEN = CB_COMBO_LENGTH;
 
-const uint16_t PROGMEM bspc_combo[] = {KC_J, KC_K, COMBO_END};
-const uint16_t PROGMEM del_combo[] = {KC_K, KC_L, COMBO_END};
-const uint16_t PROGMEM bspc_lower_combo[] = {LOWER_4, LOWER_5, COMBO_END};
-const uint16_t PROGMEM del_lower_combo[] = {LOWER_5, LOWER_6, COMBO_END};
-const uint16_t PROGMEM bspc_other_combo[] = {MCC_BSPC, MCC_BSDL, COMBO_END};
+const uint16_t PROGMEM del_combo[] = {SFT_J, CTL_K, COMBO_END};
+const uint16_t PROGMEM bspc_combo[] = {CTL_K, ALT_L, COMBO_END};
+const uint16_t PROGMEM del_lower_combo[] = {LOWER_4, LOWER_5, COMBO_END};
+const uint16_t PROGMEM bspc_lower_combo[] = {LOWER_5, LOWER_6, COMBO_END};
 const uint16_t PROGMEM del_other_combo[] = {MCC_BSDL, MCC_DEL, COMBO_END};
+const uint16_t PROGMEM bspc_other_combo[] = {MCC_BSPC, MCC_BSDL, COMBO_END};
 
-const uint16_t PROGMEM left_combo[] = {KC_S, KC_D, COMBO_END};
-const uint16_t PROGMEM right_combo[] = {KC_D, KC_F, COMBO_END};
+const uint16_t PROGMEM left_combo[] = {ALT_S, CTL_D, COMBO_END};
+const uint16_t PROGMEM right_combo[] = {CTL_D, SFT_F, COMBO_END};
 const uint16_t PROGMEM left_lower_combo[] = {KC_DLR, LT(0,KC_LPRN), COMBO_END};
 const uint16_t PROGMEM right_lower_combo[] = {LT(0,KC_LPRN), LT(0,KC_RPRN), COMBO_END};
 
@@ -89,36 +106,49 @@ combo_t key_combos[] = {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-/* QWERTY
- * LT(0,KC_SLSH) refer to process_record_user(...)
+/* QWERTY 
+ * Home row mods
+ * ESC+1+2 = Ctrl + Alt + Del
+ * ESC+1+3 = Ctrl + Alt + Ins
+ * S + D = Left
+ * D + F = Right
+ * J + K = Del
+ * K + L = Backspace
+ * Hold / for \
+ * Hold lower Backspace for AltGr
+ * Shift + Esc = ~
+ * GUI + Esc = `
+ * 
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * | ESC`~|   1  |   2  |   3  |   4  |   5  |                    |   6  |   7  |   8  |   9  |   0  |BackSP|
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * | Tab  |   Q  |   W  |   E  |   R  |   T  |                    |   Y  |   U  |   I  |   O  |   P  |  -_  |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |LShift|   A  |   S  |   D  |   F  |   G  |-------.    ,-------|   H  |   J  |   K  |   L  |   ;: |RShift|
+ * |LShift| GUI_A| ALT_S| CTL_D| SFT_F|   G  |-------.    ,-------|   H  | SFT_J| CTL_K| ALT_L|GUI_;:|RShift|
  * |------+------+------+------+------+------|   =+  |    |   '"  |------+------+------+------+------+------|
  * |LCtrl |   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,< |   .> |/?  \||RCtrl |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
- *                   | LGUI | LAlt |LOWER | /Space  /       \Enter \  |RAISE |AltGr | RGUI |
- *                   |      |      |      |/       /         \      \ |      |      |      |
+ *                   | LGUI | LAlt |LOWER | /Space  /       \Enter \  |RAISE |BackSP| RGUI |
+ *                   |      |      |      |/       /         \      \ |      |AltGr |      |
  *                   `----------------------------'           '------''--------------------'
  */
  [_QWERTY] = LAYOUT( \
-  KC_GESC,  KC_1,  KC_2,  KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,   KC_0,          KC_BSPC, \
-  KC_TAB,   KC_Q,  KC_W,  KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,          KC_MINS, \
-  KC_LSFT,  KC_A,  KC_S,  KC_D,    KC_F,    KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN,       KC_RSFT, \
-  KC_LCTL,  KC_Z,  KC_X,  KC_C,    KC_V,    KC_B, KC_EQL,   KC_QUOT,  KC_N,    KC_M,    KC_COMM, KC_DOT, LT(0,KC_SLSH), KC_RCTL, \
-                          KC_LGUI, KC_LALT, TT(_LOWER), KC_SPC, KC_ENT, TT(_RAISE), KC_RALT, KC_RGUI \
+  KC_GESC,  KC_1,  KC_2,  KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,          KC_BSPC, \
+  KC_TAB,   KC_Q,  KC_W,  KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,          KC_MINS, \
+  KC_LSFT,  GUI_A, ALT_S, CTL_D,   SFT_F,   KC_G,                     KC_H,    SFT_J,   CTL_K,   ALT_L,   GUI_SCLN,      KC_RSFT, \
+  KC_LCTL,  KC_Z,  KC_X,  KC_C,    KC_V,    KC_B, KC_EQL,   KC_QUOT,  KC_N,    KC_M,    KC_COMM, DOT_SFT, LT(0,KC_SLSH), KC_RCTL, \
+                          KC_LGUI, KC_LALT, TT(_LOWER), KC_SPC, KC_ENT, TT(_RAISE), RALT_BSPC, KC_RGUI \
 ),
 
  /* RAISE
+ * Combo del and backspace at the same position as default layer
+ *
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * |CLR_LY|  F1  |  F2  |  F3  |  F4  |  F5  |                    |  F6  |  F7  |  F8  |  F9  | F10  | F11  |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |      |      |      |  Up  |      |      |                    |      | ins  | pgup | home | PSCR | F12  |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |      | SFLK | Left | Down |Right |      |-------.    ,-------|      |    Bk|SP  De|l     | SLCK |      |
+ * |      | SFLK | Left | Down |Right |      |-------.    ,-------|      |    De|l   Bk|SP    | SLCK |      |
  * |------+------+------+------+------+------|  CAPS |    | NUMLCK|------+------+------+------+------+------|
  * |      | Undo | Cut  | Copy |Paste |      |-------|    |-------|      |_MOUSE| pgdn | end  | PAUS |      |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
@@ -127,14 +157,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   `----------------------------'           '------''--------------------'
  */
 [_RAISE] = LAYOUT( \
-  CLR_LY,  KC_F1,   KC_F2,   KC_F3,   KC_F4,    KC_F5,                     KC_F6,   KC_F7,      KC_F8,    KC_F9,   KC_F10,  KC_F11,\
-  _______, XXXXXXX, XXXXXXX, KC_UP,   XXXXXXX,  XXXXXXX,                   XXXXXXX, KC_INS,     KC_PGUP,  KC_HOME, KC_PSCR, KC_F12, \
-  _______, MC_SFLK, KC_LEFT, KC_DOWN, KC_RGHT,  XXXXXXX,                   XXXXXXX, MCC_BSPC,   MCC_BSDL, MCC_DEL,  KC_SLCK, _______, \
-  _______, MC_UNDO, MC_CUT,  MC_COPY, MC_PASTE, XXXXXXX, KC_CAPS, KC_NLCK, XXXXXXX, TT(_MOUSE), KC_PGDN,  KC_END,  KC_PAUS, _______, \
+  CLR_LY,  KC_F1,   KC_F2,   KC_F3,   KC_F4,    KC_F5,                     KC_F6,   KC_F7,      KC_F8,    KC_F9,    KC_F10,  KC_F11,\
+  _______, XXXXXXX, XXXXXXX, KC_UP,   XXXXXXX,  XXXXXXX,                   XXXXXXX, KC_INS,     KC_PGUP,  KC_HOME,  KC_PSCR, KC_F12, \
+  _______, MC_SFLK, KC_LEFT, KC_DOWN, KC_RGHT,  XXXXXXX,                   XXXXXXX, MCC_DEL,    MCC_BSDL, MCC_BSPC, KC_SLCK, _______, \
+  _______, MC_UNDO, MC_CUT,  MC_COPY, MC_PASTE, XXXXXXX, KC_CAPS, KC_NLCK, XXXXXXX, TT(_MOUSE), KC_PGDN,  KC_END,   KC_PAUS, _______, \
                               _______, _______, _______, KC_ENT, KC_SPC,  _______, _______, _______\
 ),
  
 /* LOWER
+ * 4 + 5 = Del
+ * 5 + 6 = Backspace
+ * Hold \ for /
+ * Hold ( for <
+ * Hold ) for >
+ * Hold 0 for AltGr
+ *
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * |CLR_LY|  F1  |  F2  |  F3  |  F4  |  F5  |                    |  F6  |  F7  |  F8  |  F9  | F10  | F11  |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
@@ -153,7 +190,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, KC_EXLM, KC_AT,   KC_LCBR,       KC_RCBR,       KC_AMPR,                          KC_PMNS, KC_7,    KC_8,    KC_9,  KC_PSLS, KC_F12, \
   _______, KC_HASH, KC_DLR,  LT(0,KC_LPRN), LT(0,KC_RPRN), LT(0,KC_BSLS),                    KC_EQL,  LOWER_4, LOWER_5, LOWER_6,  KC_DOT,  _______, \
   _______, KC_PERC, KC_CIRC, KC_LBRC,       KC_RBRC,       KC_UNDS,      KC_GRAVE,  KC_CALC, KC_PPLS, KC_1,    KC_2,    KC_3,  KC_PAST, _______, \
-                                        _______, _______, _______,         KC_ENT, KC_SPC,     _______, RALT_T(KC_0),  _______ \
+                                        _______, _______, _______,         KC_ENT, KC_SPC,     _______, RALT_0,  _______ \
 ),
 /* ADJUST
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -177,6 +214,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                              _______, _______, _______, _______, _______,  _______, _______, _______ \
 ),
 /* MOUSE
+ * Combo del and backspace at the same position as default layer
+ *
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * |CLR_LY| XXXX | XXXX | XXXX | XXXX | XXXX |                    | XXXX | XXXX | XXXX | XXXX | XXXX |BackSP|
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
@@ -299,27 +338,36 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   
   // Other Marco or Mod-Tap
   switch (keycode) {
-    case LT(0,KC_SLSH):
-      if (record->tap.count && record->event.pressed) {
-        tap_code16(KC_SLSH);
-      } else if (record->event.pressed) {
-        tap_code16(KC_BSLS); // Intercept hold function to send backslash
+    case DOT_SFT:
+      if (!record->tap.count && record->event.pressed && (!(get_mods() & MOD_MASK_SHIFT))) {
+        // Intercept hold function and not pressing shift
+        // ". <one-shot-shift>"
+        tap_code(KC_DOT);
+        tap_code(KC_SPC);
+        add_oneshot_mods(MOD_BIT(KC_LSHIFT));
+        return false;
       }
-      return false;
+      return true;
+      
+    case LT(0,KC_SLSH):
+      if (!record->tap.count && record->event.pressed) {
+        tap_code16(KC_BSLS); // Intercept hold function to send backslash
+        return false;
+      }
+      return true;
       
     case LT(0,KC_BSLS):
-      if (record->tap.count && record->event.pressed) {
-        tap_code16(KC_BSLS);
-      } else if (record->event.pressed) {
-        tap_code16(KC_SLSH); // Intercept hold function to send backslash
+      if (!record->tap.count && record->event.pressed) {
+        tap_code16(KC_SLSH); // Intercept hold function to send slash
+        return false;
       }
-      return false;
+      return true;
 
     case LT(0,KC_LPRN):
       if (record->tap.count && record->event.pressed) {
         tap_code16(KC_LPRN);
       } else if (record->event.pressed) {
-        tap_code16(KC_LABK); // Intercept hold function to send backslash
+        tap_code16(KC_LABK); // Intercept hold function to send <
       }
       return false;
 
@@ -327,7 +375,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->tap.count && record->event.pressed) {
         tap_code16(KC_RPRN);
       } else if (record->event.pressed) {
-        tap_code16(KC_RABK); // Intercept hold function to send backslash
+        tap_code16(KC_RABK); // Intercept hold function to send >
       }
       return false;
       
@@ -398,10 +446,57 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 // Longer tapping term for thumb key
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case RALT_T(KC_0):
-            return 300;
-        default:
-            return TAPPING_TERM;
-    }
+  switch (keycode) {
+    case DOT_SFT:
+      return TAPPING_TERM + 200;
+    case RALT_BSPC:
+    case RALT_0:
+      return TAPPING_TERM + 150;
+      
+    case GUI_A:
+    case ALT_S:
+    case CTL_D:
+    case SFT_F:
+    case SFT_J:
+    case CTL_K:
+    case ALT_L:
+    case GUI_SCLN:
+      return TAPPING_TERM + 70;
+    
+    default:
+      return TAPPING_TERM;
+  }
+}
+
+bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    // disable auto-repeat for quick tap followed by a hold 
+    case GUI_A:
+    case ALT_S:
+    case CTL_D:
+    case SFT_F:
+    case SFT_J:
+    case CTL_K:
+    case ALT_L:
+    case GUI_SCLN:
+    case LT(0,KC_SLSH):
+    case LT(0,KC_BSLS):
+      return true;
+    default:
+      return false;
+  }
+}
+
+bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    // Immediately select the hold action when another key is tapped.
+    case TT(_RAISE):
+    case TT(_LOWER):
+    case TT(_MOUSE):
+      return true;
+    // return true for layer key
+    default:
+      // Do not select the hold action when another key is tapped.
+      return false;
+  }
 }
