@@ -16,6 +16,8 @@
 #define ALT_L LALT_T(KC_L)
 #define GUI_SCLN RGUI_T(KC_SCLN)
 
+#define SFT_QUOT RSFT_T(KC_QUOT)
+
 #define RALT_BSPC RALT_T(KC_BSPC)
 #define RALT_0 RALT_T(KC_0)
 #define DOT_SFT LT(0,KC_DOT)
@@ -122,11 +124,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * | ESC`~|   1  |   2  |   3  |   4  |   5  |                    |   6  |   7  |   8  |   9  |   0  |BackSP|
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * | Tab  |   Q  |   W  |   E  |   R  |   T  |                    |   Y  |   U  |   I  |   O  |   P  |  -_  |
+ * | Tab  |   Q  |   W  |   E  |   R  |   T  |                    |   Y  |   U  |   I  |   O  |   P  |-_  =+|
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |LShift| GUI_A| ALT_S| CTL_D| SFT_F|   G  |-------.    ,-------|   H  | SFT_J| CTL_K| ALT_L|GUI_;:|RShift|
+ * |LShift| GUI_A| ALT_S| CTL_D| SFT_F|   G  |-------.    ,-------|   H  | SFT_J| CTL_K| ALT_L|GUI_;:|SFT_'"|
  * |------+------+------+------+------+------|   =+  |    |   '"  |------+------+------+------+------+------|
- * |LCtrl |   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,< |   .> |/?  \||RCtrl |
+ * |LCtrl |   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,< |.> ._^|/?  \||RCtrl |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *                   | LGUI | LAlt |LOWER | /Space  /       \Enter \  |RAISE |BackSP| RGUI |
  *                   |      |      |      |/       /         \      \ |      |AltGr |      |
@@ -134,8 +136,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
  [_QWERTY] = LAYOUT( \
   KC_GESC,  KC_1,  KC_2,  KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,          KC_BSPC, \
-  KC_TAB,   KC_Q,  KC_W,  KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,          KC_MINS, \
-  KC_LSFT,  GUI_A, ALT_S, CTL_D,   SFT_F,   KC_G,                     KC_H,    SFT_J,   CTL_K,   ALT_L,   GUI_SCLN,      KC_RSFT, \
+  KC_TAB,   KC_Q,  KC_W,  KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,          LT(0,KC_MINS), \
+  KC_LSFT,  GUI_A, ALT_S, CTL_D,   SFT_F,   KC_G,                     KC_H,    SFT_J,   CTL_K,   ALT_L,   GUI_SCLN,      SFT_QUOT, \
   KC_LCTL,  KC_Z,  KC_X,  KC_C,    KC_V,    KC_B, KC_EQL,   KC_QUOT,  KC_N,    KC_M,    KC_COMM, DOT_SFT, LT(0,KC_SLSH), KC_RCTL, \
                           KC_LGUI, KC_LALT, TT(_LOWER), KC_SPC, KC_ENT, TT(_RAISE), RALT_BSPC, KC_RGUI \
 ),
@@ -202,7 +204,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
  * |      |      |      |      | Mute |      |-------|    |-------|      |      | MODE | HUE- | SAT- | VAL- |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
- *                   |      |      |      | /       /       \      \  |      |      |      |
+ *                   |      |      |      | /Space  /       \Enter \  |      |      |      |
  *                   |      |      |      |/       /         \      \ |      |      |      |
  *                   `----------------------------'           '------''--------------------'
  */
@@ -211,7 +213,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_VOLU, KC_BRIU,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
   XXXXXXX, KC_MRWD, KC_MPLY, KC_MFFD, KC_VOLD, KC_BRID,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_MUTE, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,\
-                             _______, _______, _______, _______, _______,  _______, _______, _______ \
+                             _______, _______, _______, KC_SPC,  KC_ENT,  _______, _______, _______ \
 ),
 /* MOUSE
  * Combo del and backspace at the same position as default layer
@@ -349,6 +351,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return true;
       
+	case LT(0,KC_MINS):
+      if (!record->tap.count && record->event.pressed) {
+        tap_code16(KC_EQL); // Intercept hold function to send =
+        return false;
+      }
+      return true;
+	
     case LT(0,KC_SLSH):
       if (!record->tap.count && record->event.pressed) {
         tap_code16(KC_BSLS); // Intercept hold function to send backslash
@@ -365,7 +374,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case LT(0,KC_LPRN):
       if (record->tap.count && record->event.pressed) {
-        tap_code16(KC_LPRN);
+        tap_code16(KC_LPRN); // Tap to send (
       } else if (record->event.pressed) {
         tap_code16(KC_LABK); // Intercept hold function to send <
       }
@@ -373,7 +382,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case LT(0,KC_RPRN):
       if (record->tap.count && record->event.pressed) {
-        tap_code16(KC_RPRN);
+        tap_code16(KC_RPRN); // Tap to send )
       } else if (record->event.pressed) {
         tap_code16(KC_RABK); // Intercept hold function to send >
       }
@@ -402,7 +411,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         unregister_code16(KC_6);
       }
       return false;
-      
+    
+	// Shift lock key, press it again or press other shift key to cancel it
     case MC_SFLK:
       if (record->event.pressed) {
         if (get_mods() & MOD_MASK_SHIFT) {
@@ -420,6 +430,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       break;
+	case SFT_F:
+	case SFT_J:
+	case SFT_QUOT:
+	  if (!record->tap.count && record->event.pressed) {
+        if (get_mods() & MOD_MASK_SHIFT) {
+          del_mods(MOD_MASK_SHIFT);
+        }
+	  }
       
     case CLR_LY:
       layer_clear();
@@ -461,6 +479,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     case CTL_K:
     case ALT_L:
     case GUI_SCLN:
+	case SFT_QUOT:
       return TAPPING_TERM + 70;
     
     default:
@@ -479,8 +498,11 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
     case CTL_K:
     case ALT_L:
     case GUI_SCLN:
+	case LT(0,KC_MINS):
     case LT(0,KC_SLSH):
     case LT(0,KC_BSLS):
+    case LT(0,KC_LPRN):
+    case LT(0,KC_RPRN):
       return true;
     default:
       return false;
