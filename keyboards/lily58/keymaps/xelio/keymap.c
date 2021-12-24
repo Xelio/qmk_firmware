@@ -23,6 +23,18 @@
 #define RGUI_0 RGUI_T(KC_0)
 #define DOT_SFT LT(0,KC_DOT)
 
+// Hold for number
+#define W_H1 LT(0,KC_W)
+#define E_H2 LT(0,KC_E)
+#define R_H3 LT(0,KC_R)
+#define X_H4 LT(0,KC_X)
+#define C_H5 LT(0,KC_C)
+#define V_H6 LT(0,KC_V)
+#define U_H7 LT(0,KC_U)
+#define I_H8 LT(0,KC_I)
+#define O_H9 LT(0,KC_O)
+#define P_H0 LT(0,KC_P)
+
 // Layer
 enum layer_number {
   _QWERTY = 0,
@@ -71,6 +83,8 @@ enum custom_keycodes {
   MCC_DEL,
 };
 
+
+// Combo
 uint16_t COMBO_LEN = CB_COMBO_LENGTH;
 
 const uint16_t PROGMEM del_combo[] = {SFT_J, CTL_K, COMBO_END};
@@ -107,6 +121,35 @@ combo_t key_combos[] = {
 
 
 
+// Tap-Hold dual function key
+typedef struct {
+    uint16_t mod_tap_keycode;
+    uint16_t tap_keycode;
+    uint16_t hold_keycode;
+} sTapHolds;
+
+#define S_TAP_HOLD(kc1, kc2, kc3) { .mod_tap_keycode = kc1, .tap_keycode = kc2, .hold_keycode = kc3 }
+
+sTapHolds th_keycodes[] = {
+    S_TAP_HOLD(LT(0,KC_MINS), 0, KC_EQL),// tap -, hold =
+    S_TAP_HOLD(LT(0,KC_SLSH), 0, KC_BSLS),// tap slash, hold backslash
+    S_TAP_HOLD(LT(0,KC_BSLS), 0, KC_SLSH), // tap backslash, hold slash
+    S_TAP_HOLD(LT(0,KC_LPRN), KC_LPRN, KC_LABK), // tap (, hold <
+    S_TAP_HOLD(LT(0,KC_RPRN), KC_RPRN, KC_RABK), // tap ), hold >
+    S_TAP_HOLD(W_H1, 0, KC_1),
+    S_TAP_HOLD(E_H2, 0, KC_2),
+    S_TAP_HOLD(R_H3, 0, KC_3),
+    S_TAP_HOLD(X_H4, 0, KC_4),
+    S_TAP_HOLD(C_H5, 0, KC_5),
+    S_TAP_HOLD(V_H6, 0, KC_6),
+    S_TAP_HOLD(U_H7, 0, KC_7),
+    S_TAP_HOLD(I_H8, 0, KC_8),
+    S_TAP_HOLD(O_H9, 0, KC_9),
+    S_TAP_HOLD(P_H0, 0, KC_0)
+};
+
+const size_t th_keycodes_count = sizeof(th_keycodes) / sizeof(sTapHolds);
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* QWERTY 
@@ -125,11 +168,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * | ESC`~|   1  |   2  |   3  |   4  |   5  |                    |   6  |   7  |   8  |   9  |   0  |BackSP|
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * | Tab  |   Q  |   W  |   E  |   R  |   T  |                    |   Y  |   U  |   I  |   O  |   P  |-_  =+|
+ * | Tab  |   Q  |  W_1 |  E_2 |  R_3 |   T  |                    |   Y  |  U_7 |  I_8 |  O_9 |  P_0 |-_  =+|
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |LShift| GUI_A| ALT_S| CTL_D| SFT_F|   G  |-------.    ,-------|   H  | SFT_J| CTL_K| ALT_L|GUI_;:|SFT_'"|
  * |------+------+------+------+------+------|   =+  |    |   '"  |------+------+------+------+------+------|
- * |LCtrl |   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,< |.> ._^|/?  \||RCtrl |
+ * |LCtrl |   Z  |  X_4 |  C_5 |  V_6 |   B  |-------|    |-------|   N  |   M  |   ,< |.> ._^|/?  \||RCtrl |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *                   | LGUI | LAlt |LOWER | /Space  /       \Enter \  |RAISE |BackSP| RGUI |
  *                   |      |      |      |/       /         \      \ |      |AltGr |      |
@@ -137,9 +180,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
  [_QWERTY] = LAYOUT( \
   KC_GESC,  KC_1,  KC_2,  KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,          KC_BSPC, \
-  KC_TAB,   KC_Q,  KC_W,  KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,          LT(0,KC_MINS), \
+  KC_TAB,   KC_Q,  W_H1,  E_H2,    R_H3,    KC_T,                     KC_Y,    U_H7,    I_H8,    O_H9,    P_H0,          LT(0,KC_MINS), \
   KC_LSFT,  GUI_A, ALT_S, CTL_D,   SFT_F,   KC_G,                     KC_H,    SFT_J,   CTL_K,   ALT_L,   GUI_SCLN,      SFT_QUOT, \
-  KC_LCTL,  KC_Z,  KC_X,  KC_C,    KC_V,    KC_B, KC_EQL,   KC_QUOT,  KC_N,    KC_M,    KC_COMM, DOT_SFT, LT(0,KC_SLSH), KC_RCTL, \
+  KC_LCTL,  KC_Z,  X_H4,  C_H5,    V_H6,    KC_B, KC_EQL,   KC_QUOT,  KC_N,    KC_M,    KC_COMM, DOT_SFT, LT(0,KC_SLSH), KC_RCTL, \
                           KC_LGUI, KC_LALT, TT(_LOWER), KC_SPC, KC_ENT, TT(_RAISE), RALT_BSPC, KC_RGUI \
 ),
 
@@ -339,6 +382,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
   }
   
+  // Tap-Hold dual function key
+  for (size_t i = 0; i < th_keycodes_count; i++) {
+    if (keycode == th_keycodes[i].mod_tap_keycode) {
+      if (!record->tap.count && record->event.pressed) {
+        tap_code16(th_keycodes[i].hold_keycode); // Intercept hold function to send =
+        return false;
+      }
+      if (record->tap.count && record->event.pressed && th_keycodes[i].tap_keycode != 0) {
+        tap_code16(th_keycodes[i].tap_keycode);
+        return false;
+      }
+      return true;
+    }
+  }
+  
   // Other Marco or Mod-Tap
   switch (keycode) {
     case DOT_SFT:
@@ -352,42 +410,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return true;
       
-    case LT(0,KC_MINS):
-      if (!record->tap.count && record->event.pressed) {
-        tap_code16(KC_EQL); // Intercept hold function to send =
-        return false;
-      }
-      return true;
-    
-    case LT(0,KC_SLSH):
-      if (!record->tap.count && record->event.pressed) {
-        tap_code16(KC_BSLS); // Intercept hold function to send backslash
-        return false;
-      }
-      return true;
-      
-    case LT(0,KC_BSLS):
-      if (!record->tap.count && record->event.pressed) {
-        tap_code16(KC_SLSH); // Intercept hold function to send slash
-        return false;
-      }
-      return true;
-
-    case LT(0,KC_LPRN):
-      if (record->tap.count && record->event.pressed) {
-        tap_code16(KC_LPRN); // Tap to send (
-      } else if (record->event.pressed) {
-        tap_code16(KC_LABK); // Intercept hold function to send <
-      }
-      return false;
-
-    case LT(0,KC_RPRN):
-      if (record->tap.count && record->event.pressed) {
-        tap_code16(KC_RPRN); // Tap to send )
-      } else if (record->event.pressed) {
-        tap_code16(KC_RABK); // Intercept hold function to send >
-      }
-      return false;
       
     case LOWER_4:
       if (record->event.pressed) {
@@ -439,7 +461,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           del_mods(MOD_MASK_SHIFT);
         }
       }
-      
+    
+    // Esc as panic button
     case CLR_LY:
       layer_clear();
     case KC_GESC:
@@ -468,6 +491,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case DOT_SFT:
       return TAPPING_TERM + 200;
+      
     case RALT_BSPC:
     case RALT_0:
     case RGUI_0:
@@ -484,6 +508,18 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     case SFT_QUOT:
       return TAPPING_TERM + 70;
     
+    case W_H1:
+    case E_H2:
+    case R_H3:
+    case X_H4:
+    case C_H5:
+    case V_H6:
+    case U_H7:
+    case I_H8:
+    case O_H9:
+    case P_H0:
+      return TAPPING_TERM + 150;
+      
     default:
       return TAPPING_TERM;
   }
@@ -505,6 +541,16 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
     case LT(0,KC_BSLS):
     case LT(0,KC_LPRN):
     case LT(0,KC_RPRN):
+    case W_H1:
+    case E_H2:
+    case R_H3:
+    case X_H4:
+    case C_H5:
+    case V_H6:
+    case U_H7:
+    case I_H8:
+    case O_H9:
+    case P_H0:
       return true;
     default:
       return false;
