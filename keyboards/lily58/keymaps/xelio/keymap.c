@@ -81,6 +81,8 @@ enum custom_keycodes {
   MCC_BSPC,
   MCC_BSDL,
   MCC_DEL,
+  
+  LT_UDQU,
 };
 
 
@@ -133,8 +135,14 @@ typedef struct {
 sTapHolds th_keycodes[] = {
     S_TAP_HOLD(LT(0,KC_MINS), 0, KC_EQL),// tap -, hold =
     S_TAP_HOLD(LT(0,KC_SLSH), 0, KC_BSLS),// tap slash, hold backslash
-    S_TAP_HOLD(LT(0,KC_LPRN), KC_LPRN, KC_LABK), // tap (, hold <
-    S_TAP_HOLD(LT(0,KC_RPRN), KC_RPRN, KC_RABK), // tap ), hold >
+    S_TAP_HOLD(LT(0,KC_LPRN), KC_LPRN, KC_LABK), // tap ( hold <
+    S_TAP_HOLD(LT(0,KC_RPRN), KC_RPRN, KC_RABK), // tap ) hold >
+    S_TAP_HOLD(LT(0,KC_COLN), KC_COLN, KC_SCLN), // tap : hold ;
+    S_TAP_HOLD(LT(0,KC_BSLS), KC_BSLS, KC_PIPE), // tap \ hold |
+    S_TAP_HOLD(LT(0,KC_QUOT), KC_QUOT, KC_DQUO), // tap ' hold "
+    S_TAP_HOLD(LT(0,KC_GRAVE), KC_GRAVE, KC_TILD), // tap ` hold ~
+    S_TAP_HOLD(LT(0,LT_UDQU), KC_UNDS, KC_QUES), // tap _ hold ?
+    
     S_TAP_HOLD(W_H1, 0, KC_1),
     S_TAP_HOLD(E_H2, 0, KC_2),
     S_TAP_HOLD(R_H3, 0, KC_3),
@@ -222,20 +230,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |      |   !  |   @  |   {  |   }  |   &  |                    |   +  |  7   |   8  |   9  |   *  | F12  |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |      |   #  |   $  |(    <|)    >|  \|  |-------.    ,-------|   =+ |  4   |   5  |   6  |   .  |  '"  |
- * |------+------+------+------+------+------|   `~  |    | CALC  |------+------+------+------+------+------|
- * |      |   %  |   ^  |   [  |   ]  |   _  |-------|    |-------|   -  |  1   |   2  |   3  |   /? |  ;:  |
+ * |      |   #  |   $  |(    <|)    >|\    ||-------.    ,-------|   =+ |  4   |   5  |   6  |   .  |'    "|
+ * |------+------+------+------+------+------| `    ~|    | CALC  |------+------+------+------+------+------|
+ * |      |   %  |   ^  |   [  |   ]  |   _  |-------|    |-------|   -  |  1   |   2  |   3  |   /? |:    ;|
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *                   | LAlt | LGUI |LOWER | /Enter  /       \Space \  |RAISE |   0  |   0  |
  *                   |      |      |      |/       /         \      \ |      | AltGr| RGUI |
  *                   `----------------------------'           '------''--------------------'
  */
 [_LOWER] = LAYOUT( \
-  CLR_LY,  KC_F1,   KC_F2,   KC_F3,         KC_F4,         KC_F5,                            KC_F6,   KC_F7,   KC_F8,   KC_F9, KC_F10,  KC_F11, \
-  _______, KC_EXLM, KC_AT,   KC_LCBR,       KC_RCBR,       KC_AMPR,                          KC_PPLS, KC_7,    KC_8,    KC_9,  KC_PAST, KC_F12, \
-  _______, KC_HASH, KC_DLR,  LT(0,KC_LPRN), LT(0,KC_RPRN), KC_BSLS,                    KC_EQL,  LOWER_4, LOWER_5, LOWER_6,  KC_DOT,  KC_QUOT, \
-  _______, KC_PERC, KC_CIRC, KC_LBRC,       KC_RBRC,       KC_UNDS,      KC_GRAVE,  KC_CALC, KC_PMNS, KC_1,    KC_2,    KC_3,  KC_SLSH, KC_SCLN, \
-                                        _______, _______, _______,         KC_ENT, KC_SPC,     _______, RALT_0,  RGUI_0 \
+  CLR_LY,  KC_F1,   KC_F2,   KC_F3,         KC_F4,         KC_F5,                                        KC_F6,   KC_F7,   KC_F8,   KC_F9,    KC_F10,  KC_F11, \
+  _______, KC_EXLM, KC_AT,   KC_LCBR,       KC_RCBR,       KC_AMPR,                                      KC_PPLS, KC_7,    KC_8,    KC_9,     KC_PAST, KC_F12, \
+  _______, KC_HASH, KC_DLR,  LT(0,KC_LPRN), LT(0,KC_RPRN), LT(0,KC_BSLS),                               KC_EQL,  LOWER_4, LOWER_5, LOWER_6,  KC_DOT,  LT(0,KC_QUOT), \
+  _______, KC_PERC, KC_CIRC, KC_LBRC,       KC_RBRC,       LT(0,LT_UDQU),   LT(0,KC_GRAVE),  KC_CALC,   KC_PMNS, KC_1,    KC_2,    KC_3,     KC_SLSH, LT(0,KC_COLN), \
+                                        _______, _______, _______,                   KC_ENT, KC_SPC,     _______, RALT_0,  RGUI_0 \
 ),
 /* ADJUST
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -539,6 +547,12 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
     case LT(0,KC_SLSH):
     case LT(0,KC_LPRN):
     case LT(0,KC_RPRN):
+    case LT(0,KC_COLN):
+    case LT(0,KC_BSLS):
+    case LT(0,KC_QUOT):
+    case LT(0,KC_GRAVE):
+    case LT(0,LT_UDQU):
+    
     case W_H1:
     case E_H2:
     case R_H3:
